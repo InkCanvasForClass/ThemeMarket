@@ -1,0 +1,79 @@
+name: Publish Theme Market
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build theme packages and index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          shopt -s nullglob
+          theme_files=(index/themes/*.theme.yml)
+          themes_json='[]'
+
+          for descriptor in "${theme_files[@]}"; do
+            id=$(sed -n 's/^id: *//p' "$descriptor")
+            name=$(sed -n 's/^name: *//p' "$descriptor")
+            version=$(sed -n 's/^version: *//p' "$descriptor")
+            description=$(sed -n 's/^description: *//p' "$descriptor")
+            author=$(sed -n 's/^author: *//p' "$descriptor")
+            package="$id.icctheme"
+
+            test -f "themes/$id/manifest.json"
+            test -f "themes/$id/Theme.xaml"
+            (cd "themes/$id" && zip -qr "../../dist/$package" .)
+
+            sha256=$(sha256sum "dist/$package" | cut -d' ' -f1)
+            download_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/latest/$package"
+
+            themes_json=$(jq --arg id "$id" \
+              --arg name "$name" \
+              --arg description "$description" \
+              --arg version "$version" \
+              --arg author "$author" \
+              --arg downloadUrl "$download_url" \
+              --arg sha256 "$sha256" \
+              '. + [{Manifest:{Id:$id,Name:$name,Description:$description,Version:$version,Author:$author},DownloadUrl:$downloadUrl,DownloadSha256:$sha256,BannerUrl:""}]' \
+              <<< "$themes_json")
+          done
+
+          jq -n --argjson themes "$themes_json" '{Themes:$themes}' > dist/themes.json
+          cp dist/themes.json themes.json
+          cat dist/themes.json
+
+      - name: Upload latest release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: Theme Market Latest
+          allowUpdates: true
+          replacesArtifacts: true
+          artifacts: "dist/themes.json,dist/*.icctheme"
+          body: "Auto-generated floating bar theme market"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit generated index
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- themes.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add themes.json
+          git commit -m "chore: update theme market index"
+          git push
