@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <LinearGradientBrush x:Key="FloatingBarBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F23A1F2A" Offset="0" />
+        <GradientStop Color="#F26E2B47" Offset="0.55" />
+        <GradientStop Color="#F24D2C40" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="FloatingBarForegroundBrush" Color="#FFFFF5F7" />
+    <SolidColorBrush x:Key="FloatingBarBorderBrush" Color="#CCFFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarAccentBrush" Color="#FFFFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarButtonHoverBrush" Color="#3DFFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarButtonPressedBrush" Color="#70FFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarPopupBackgroundBrush" Color="#F2281A24" />
+    <SolidColorBrush x:Key="FloatingBarPopupInnerBackgroundBrush" Color="#F23A2A3A" />
+    <SolidColorBrush x:Key="FloatingBarPopupInnerBorderBrush" Color="#B3FFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarPopupTitleForegroundBrush" Color="#FFFFE4EC" />
+    <SolidColorBrush x:Key="FloatingBarPopupCloseBrush" Color="#FFE91E63" />
+    <SolidColorBrush x:Key="FloatingBarPopupHoverBrush" Color="#44FFB7C5" />
+    <SolidColorBrush x:Key="FloatingBarTitleBackgroundBrush" Color="#CCE91E63" />
+    <DropShadowEffect x:Key="FloatingBarShadowEffect" BlurRadius="22" ShadowDepth="3" Direction="270" Opacity="0.5" Color="#1A04101A" />
+    <CornerRadius x:Key="FloatingBarCornerRadius">14</CornerRadius>
+</ResourceDictionary>
