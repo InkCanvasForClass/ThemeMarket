@@ -1,0 +1,8 @@
+id: miku
+name: 初音未来 · 苍蓝电子
+version: 1.0.0
+description: 以初音未来的标志性青绿色与黑色制服为灵感的浮动栏主题
+author: ICC-CE
+repoOwner: InkCanvasForClass
+repoName: ThemeMarket
+downloadPath: releases/download/v{version}/miku.icctheme
